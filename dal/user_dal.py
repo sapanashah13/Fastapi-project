@@ -1,0 +1,18 @@
+from fastapi import HTTPException
+
+from fastapi import Depends
+from fastapi.security import HTTPBearer
+
+from auth.jwt_handler import verify_token
+
+security = HTTPBearer()
+
+def get_current_user(token=Depends(security)):
+    payload = verify_token(token.credentials)
+
+    if not payload:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+    return payload
+
+
